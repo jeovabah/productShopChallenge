@@ -5,17 +5,16 @@ import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./providers/Auth";
 import "antd/dist/antd.css";
 import { ProductProvider } from "./providers/Product";
+import { Providers } from "./providers";
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <BrowserRouter>
-    <AuthProvider>
-      <ProductProvider>
-        <React.StrictMode>
-          <App />
-        </React.StrictMode>
-      </ProductProvider>
-    </AuthProvider>
+    <Providers>
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    </Providers>
   </BrowserRouter>
 );

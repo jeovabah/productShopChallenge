@@ -13,7 +13,7 @@ export const ProductService = {
       description: data.description,
       price: data.price,
       link_url: data.link_url,
-      category_id: data.category_id,
+      category_id: String(data.category_id),
     });
   },
   update: (data: any) => {

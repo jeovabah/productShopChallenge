@@ -5,6 +5,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { customToast } from "../../Utils/toast";
 import { ProductService } from "./services";
 
 interface ProductContextProps {
@@ -14,19 +15,24 @@ interface ProductContextProps {
   createProduct?: any;
   updateProduct?: any;
   deleteProduct?: any;
+  loading?: boolean;
 }
 
 const ProductContext = createContext({} as ProductContextProps);
 
 export const ProductProvider = ({ children }: any) => {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [product, setProduct] = useState({});
   const getProducts = useCallback(async () => {
+    setLoading(true);
     try {
       const response = await ProductService.get();
       setProducts(response.data);
+      setLoading(false);
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   }, []);
 
@@ -44,6 +50,35 @@ export const ProductProvider = ({ children }: any) => {
     async (data: any) => {
       try {
         const response = await ProductService.create(data);
+        customToast("Produto cadastrado com Sucesso!", "success");
+        getProducts();
+        return response.data;
+      } catch (error: any) {
+        return customToast(error.response.data.message, "error");
+      }
+    },
+    [getProducts]
+  );
+
+  const updateProduct = useCallback(
+    async (data: any) => {
+      try {
+        const response = await ProductService.update(data);
+        getProducts();
+        customToast("Produto atualizado com Sucesso!", "success");
+        return response.data;
+      } catch (error: any) {
+        return customToast(error.response.data.message, "error");
+      }
+    },
+    [getProducts]
+  );
+
+  const deleteProduct = useCallback(
+    async (id: any) => {
+      try {
+        const response = await ProductService.delete(id);
+        customToast("Produto deletado com Sucesso!", "success");
         getProducts();
         return response.data;
       } catch (error) {
@@ -52,24 +87,6 @@ export const ProductProvider = ({ children }: any) => {
     },
     [getProducts]
   );
-
-  const updateProduct = useCallback(async (data: any) => {
-    try {
-      const response = await ProductService.update(data);
-      return response.data;
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
-
-  const deleteProduct = useCallback(async (id: any) => {
-    try {
-      const response = await ProductService.delete(id);
-      return response.data;
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
 
   return (
     <ProductContext.Provider
@@ -80,6 +97,7 @@ export const ProductProvider = ({ children }: any) => {
         deleteProduct,
         updateProduct,
         products,
+        loading,
       }}
     >
       {children}

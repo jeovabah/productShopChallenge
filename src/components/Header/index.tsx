@@ -14,17 +14,15 @@ export const Header = ({ routeProtected, collapsed }: Props) => {
         <nav className={style.containerNav}>
           {MenuData.map((nav) => {
             return (
-              <>
-                <NavLink
-                  key={nav.id}
-                  to={nav.to}
-                  className={({ isActive }) =>
-                    isActive ? style.active : style.inactive
-                  }
-                >
-                  {collapsed ? nav.icon : nav.title}
-                </NavLink>
-              </>
+              <NavLink
+                key={nav.id}
+                to={nav.to}
+                className={({ isActive }) =>
+                  isActive ? style.active : style.inactive
+                }
+              >
+                {collapsed ? nav.icon : nav.title}
+              </NavLink>
             );
           })}
         </nav>
