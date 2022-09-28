@@ -99,3 +99,27 @@
     padding: 0 0.5rem;
   }
 }
+
+// Card Category
+.cards {
+  width: 100%;
+  display: grid;
+  justify-content: center;
+  grid-gap: 1rem;
+  .thead {
+    display: grid;
+    grid-template-columns: 1fr 1fr ;
+    grid-gap: 4rem;
+    margin-bottom: 1rem;
+    .th {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 2.5rem;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
+      font-weight: 600;
+    }
+  }
+}

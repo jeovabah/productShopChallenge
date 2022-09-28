@@ -1,19 +1,19 @@
-.containerButton {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    background-color: #fff;
-    border: none;
-    border-radius: 5px;
+.buttonStyle {
     cursor: pointer;
-    transition: all 0.3s;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 56px;
+    border-radius: 10px;
+    border: 0;
+    padding: 0 16px;
+    color: #312e38;
+    width: 100%;
+    font-weight: 500;
+    font-size: 1.2rem;
+    margin-top: 16px;
+    transition: background-color 0.2s;
+  
     &:hover {
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      filter: brightness(0.9);
     }
-    &.active {
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    }
-}
+  }
+  
+  

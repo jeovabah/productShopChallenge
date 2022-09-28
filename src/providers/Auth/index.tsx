@@ -7,6 +7,7 @@ import {
 } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../services/api/api";
+import { customToast } from "../../Utils/toast";
 import { auth } from "./services";
 
 interface AuthContextData {
@@ -14,6 +15,7 @@ interface AuthContextData {
   signIn?: any;
   signed?: boolean;
   signOut?: any;
+  registerAccount?: any;
 }
 
 const AuthContext = createContext({} as AuthContextData);
@@ -30,8 +32,8 @@ export const AuthProvider = ({ children }: any) => {
       localStorage.setItem("@auth:User", JSON.stringify(response.data.user));
       saveAuthToken(response.data.token);
       navigate("/home");
-    } catch {
-      alert("Erro ao fazer login");
+    } catch (error: any) {
+      customToast(error.response.data.message, "error");
     }
   };
 
@@ -57,11 +59,24 @@ export const AuthProvider = ({ children }: any) => {
     }
   }, []);
 
+  //register Account
+  const registerAccount = async (data: any) => {
+    try {
+      const response = await auth.register(data);
+      console.log(response.data);
+      navigate("/login");
+    } catch (error: any) {
+      customToast(error.response.data.message, "error");
+    }
+  };
+
   useEffect(() => {
     loadingStoreData();
   }, [loadingStoreData]);
   return (
-    <AuthContext.Provider value={{ signIn, user, signed, signOut }}>
+    <AuthContext.Provider
+      value={{ signIn, user, signed, signOut, registerAccount }}
+    >
       {children}
     </AuthContext.Provider>
   );

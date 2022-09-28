@@ -14,18 +14,22 @@ interface CategoryContextProps {
   createCategory?: any;
   updateCategory?: any;
   deleteCategory?: any;
+  loading: boolean;
 }
 
 const CategoryContext = createContext({} as CategoryContextProps);
 export const CategoryProvider = ({ children }: any) => {
   const [categories, setCategories] = useState([]);
-
+  const [loading, setLoading] = useState(false);
   const getList = useCallback(async () => {
+    setLoading(true);
     try {
       const response = await CategoryService.getCategories();
       setCategories(response.data);
+      setLoading(false);
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   }, []);
 
@@ -42,9 +46,9 @@ export const CategoryProvider = ({ children }: any) => {
   );
 
   const updateCategory = useCallback(
-    async (id: string, data: any) => {
+    async (data: any) => {
       try {
-        await CategoryService.updateCategory(id, data);
+        await CategoryService.updateCategory(data);
         getList();
       } catch (error) {
         console.log(error);
@@ -73,6 +77,7 @@ export const CategoryProvider = ({ children }: any) => {
         createCategory,
         updateCategory,
         deleteCategory,
+        loading,
       }}
     >
       {children}

@@ -10,19 +10,26 @@ import { columnsTableProduct, maskMoney } from "../../Utils";
 import { customToast } from "../../Utils/toast";
 import "./styles.scss";
 export function Product() {
-  const { products, getProducts, createProduct, loading, updateProduct } =
-    useProduct();
+  const {
+    products,
+    getProducts,
+    createProduct,
+    loading,
+    updateProduct,
+    deleteProduct,
+  } = useProduct();
   const { getList, categories } = useCategory();
   const refUnicLoad = useRef(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalEdit, setModalEdit] = useState(false);
-
+  const [modalDelete, setModalDelete] = useState(false);
   const [product, setProduct] = useState({
     name: "",
     description: "",
     price: "",
     link_url: "",
     category_id: "",
+    id: "",
   });
 
   const newProduct = useCallback(async () => {
@@ -41,6 +48,7 @@ export function Product() {
         price: "",
         link_url: "",
         category_id: "",
+        id: "",
       });
     } else {
       return customToast("Preencha todos os campos", "error");
@@ -63,11 +71,21 @@ export function Product() {
         price: "",
         link_url: "",
         category_id: "",
+        id: "",
       });
     } else {
       return customToast("Preencha todos os campos", "error");
     }
   }, [product, updateProduct]);
+
+  const deleteInProduct = useCallback(
+    async (id: any) => {
+      await deleteProduct(id);
+      setModalDelete(false);
+      getProducts();
+    },
+    [deleteProduct, getProducts]
+  );
 
   const openModalCreate = useCallback(() => {
     setModalOpen(true);
@@ -81,13 +99,18 @@ export function Product() {
     }
   }, [getList, getProducts]);
 
-  const handleModalEdit = useCallback((product: any) => {
+  const openModalEdit = useCallback((product: any) => {
     setProduct(product);
     setModalEdit(true);
   }, []);
+
+  const openModalDelete = useCallback((product: any) => {
+    setProduct(product);
+    setModalDelete(true);
+  }, []);
   return (
     <>
-      {(products.length === 0 || loading) && <LoadingComponent />}
+      {loading && <LoadingComponent />}
       <div className="wrapperTable">
         <div className="wrapperHeader">
           <h1>Produtos</h1>
@@ -126,22 +149,24 @@ export function Product() {
                       />
                     </td>
                     <td>
-                      {
-                        categories.find(
-                          (category: any) =>
-                            category.id === Number(product.category_id)
-                        )?.name
-                      }
+                      {categories.find(
+                        (category: any) =>
+                          category.id === Number(product.category_id)
+                      )?.name ?? "Sem Categoria"}
                     </td>
                     <td>
                       <div className="containerButton">
                         <Button
                           type="primary"
-                          onClick={() => handleModalEdit(product)}
+                          onClick={() => openModalEdit(product)}
                         >
                           Editar
                         </Button>
-                        <Button type="primary" style={{ background: "#902" }}>
+                        <Button
+                          type="primary"
+                          style={{ background: "#902" }}
+                          onClick={() => openModalDelete(product)}
+                        >
                           Excluir
                         </Button>
                       </div>
@@ -288,6 +313,21 @@ export function Product() {
                 </option>
               ))}
             </select>
+          </div>
+        </div>
+      </ModalComponent>
+
+      {/* Modal Edit */}
+      <ModalComponent
+        setOpen={setModalDelete}
+        open={modalDelete}
+        title={"Excluir Produto " + '"' + product.name + '"'}
+        onClick={() => deleteInProduct(product.id)}
+        setProduct={setProduct}
+      >
+        <div className="wrapperModal">
+          <div className="wrapperInput">
+            <p>Tem certeza que deseja excluir o produto {product.name} ? </p>
           </div>
         </div>
       </ModalComponent>

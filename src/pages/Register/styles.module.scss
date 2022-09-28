@@ -1,0 +1,27 @@
+.container {
+  height: 100vh;
+  background-color: #312E38;
+  display: flex;
+  align-items: stretch;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  place-content: center;
+
+  width: 100%;
+
+  p {
+      font-size: 1.2rem;
+      color: #fff;
+      margin-top: 16px;
+  }
+  form {
+    margin: 3.5rem 0;
+    width: 340px;
+    text-align: center;
+  }
+}
+
