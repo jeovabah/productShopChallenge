@@ -11,7 +11,7 @@ export const ProductService = {
     return api.post(`products`, {
       name: data.name,
       description: data.description,
-      price: data.price,
+      price: data.price.replace(",", "."),
       link_url: data.link_url,
       category_id: String(data.category_id),
     });
@@ -20,7 +20,7 @@ export const ProductService = {
     return api.put(`products/${data.id}`, {
       name: data.name,
       description: data.description,
-      price: data.price,
+      price: data.price.replace(",", "."),
       link_url: data.link_url,
       category_id: data.category_id,
     });

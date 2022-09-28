@@ -5,6 +5,7 @@ import Search from "antd/lib/input/Search";
 import { useProduct } from "../../providers/Product";
 import "./styles.scss";
 import { CardProduct } from "../../components/CardProduct";
+import { Select } from "antd";
 export default function Home() {
   const {
     products,
@@ -28,6 +29,18 @@ export default function Home() {
       <div className="containerProduct">
         <div className="wrapperHeader">
           <h1>Produtos</h1>
+          <Select
+            style={{ width: 200 }}
+            placeholder="Selecione uma categoria"
+            onChange={(value) => getProducts(value)}
+          >
+            {categories.map((category: any) => (
+              <Select.Option key={category.id} value={category.id}>
+                {category.name}
+              </Select.Option>
+            ))}
+          </Select>
+
           <div className="wrapperSearch">
             <Search
               placeholder="Pesquisar"

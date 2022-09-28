@@ -28,7 +28,13 @@ export const LayoutComponent = ({ children }: any) => {
             }
           )}
         </Header>
-        <Content className="site-layout-background">{children}</Content>
+        <Content
+          className="site-layout-background"
+          id="divHeight"
+          style={{ overflowY: "scroll" }}
+        >
+          {children}
+        </Content>
       </Layout>
     </Layout>
   );
