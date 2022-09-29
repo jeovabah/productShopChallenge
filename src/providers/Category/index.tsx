@@ -5,6 +5,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { customToast } from "../../Utils/toast";
 import { CategoryService } from "./services";
 
 interface CategoryContextProps {
@@ -21,10 +22,10 @@ const CategoryContext = createContext({} as CategoryContextProps);
 export const CategoryProvider = ({ children }: any) => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
-  const getList = useCallback(async () => {
+  const getList = useCallback(async (search: string) => {
     setLoading(true);
     try {
-      const response = await CategoryService.getCategories();
+      const response = await CategoryService.getCategories(search);
       setCategories(response.data);
       setLoading(false);
     } catch (error) {
@@ -37,7 +38,8 @@ export const CategoryProvider = ({ children }: any) => {
     async (data: any) => {
       try {
         await CategoryService.createCategory(data);
-        getList();
+        getList("");
+        customToast("Categoria criada com sucesso", "success");
       } catch (error) {
         console.log(error);
       }
@@ -49,7 +51,8 @@ export const CategoryProvider = ({ children }: any) => {
     async (data: any) => {
       try {
         await CategoryService.updateCategory(data);
-        getList();
+        getList("");
+        customToast("Categoria Atualizada com sucesso", "success");
       } catch (error) {
         console.log(error);
       }
@@ -61,7 +64,8 @@ export const CategoryProvider = ({ children }: any) => {
     async (id: string) => {
       try {
         await CategoryService.deleteCategory(id);
-        getList();
+        getList("");
+        customToast("Categoria Removida com sucesso", "success");
       } catch (error) {
         console.log(error);
       }

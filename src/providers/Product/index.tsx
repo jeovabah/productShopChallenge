@@ -24,10 +24,10 @@ export const ProductProvider = ({ children }: any) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [product, setProduct] = useState({});
-  const getProducts = useCallback(async () => {
+  const getProducts = useCallback(async (name: string, category_id: string) => {
     setLoading(true);
     try {
-      const response = await ProductService.get();
+      const response = await ProductService.get(name, category_id);
       setProducts(response.data);
       setLoading(false);
     } catch (error) {
@@ -51,7 +51,7 @@ export const ProductProvider = ({ children }: any) => {
       try {
         const response = await ProductService.create(data);
         customToast("Produto cadastrado com Sucesso!", "success");
-        getProducts();
+        getProducts("", "");
         return response.data;
       } catch (error: any) {
         return customToast(error.response.data.message, "error");
@@ -64,7 +64,7 @@ export const ProductProvider = ({ children }: any) => {
     async (data: any) => {
       try {
         const response = await ProductService.update(data);
-        getProducts();
+        getProducts("", "");
         customToast("Produto atualizado com Sucesso!", "success");
         return response.data;
       } catch (error: any) {
@@ -79,7 +79,7 @@ export const ProductProvider = ({ children }: any) => {
       try {
         const response = await ProductService.delete(id);
         customToast("Produto deletado com Sucesso!", "success");
-        getProducts();
+        getProducts("", "");
         return response.data;
       } catch (error) {
         console.log(error);

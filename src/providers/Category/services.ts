@@ -1,8 +1,8 @@
 import { api } from "../../services/api/api";
 
 export const CategoryService = {
-  getCategories: () => {
-    return api.get("categories");
+  getCategories: (search: string = "") => {
+    return api.get(`categories?search=${search}`);
   },
   createCategory: (data: any) => {
     return api.post("categories", {

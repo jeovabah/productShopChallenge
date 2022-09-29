@@ -5,6 +5,7 @@ import { Table } from "reactstrap";
 import { CardCategory } from "../../components/CardCategory";
 import { LoadingComponent } from "../../components/LoadingComponent";
 import ModalComponent from "../../components/Modal";
+import { Spinner } from "../../components/Spinner";
 import { useCategory } from "../../providers/Category";
 import { useProduct } from "../../providers/Product";
 import { columnsTableProduct, maskMoney } from "../../Utils";
@@ -22,6 +23,7 @@ export function Category() {
   const refUnicLoad = useRef(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalEdit, setModalEdit] = useState(false);
+  const [spinner, setSpinner] = useState(false);
   const [modalDelete, setModalDelete] = useState(false);
   const [product, setProduct] = useState({
     name: "",
@@ -83,22 +85,35 @@ export function Category() {
     setProduct(product);
     setModalDelete(true);
   }, []);
+
+  const onSearch = useCallback(
+    async (e: any) => {
+      setSpinner(true);
+      await getList(e);
+      setSpinner(false);
+    },
+    [getList]
+  );
   return (
     <>
-      {loading && <LoadingComponent />}
+      {loading && !refUnicLoad.current && <LoadingComponent />}
       <div className="wrapperTable">
         <div className="wrapperHeader">
           <h1>Categorias</h1>
           <div className="wrapperSearch">
             <Search
               placeholder="Pesquisar"
-              onSearch={(value) => console.log(value)}
+              onSearch={(value) => onSearch(value)}
               style={{ width: 250 }}
             />
           </div>
           <Button type="primary" onClick={openModalCreate}>
             Nova Categoria
           </Button>
+        </div>
+        <div style={{ textAlign: "center", height: "40px" }}>
+          {" "}
+          {spinner && <Spinner />}{" "}
         </div>
         <div className="cards">
           <div className="thead">

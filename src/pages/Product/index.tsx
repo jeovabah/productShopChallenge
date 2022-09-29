@@ -1,9 +1,10 @@
-import { Button, Input, Select } from "antd";
+import { Button, Input, Select, Switch } from "antd";
 import Search from "antd/lib/input/Search";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Table } from "reactstrap";
 import { LoadingComponent } from "../../components/LoadingComponent";
 import ModalComponent from "../../components/Modal";
+import { Spinner } from "../../components/Spinner";
 import { useCategory } from "../../providers/Category";
 import { useProduct } from "../../providers/Product";
 import { columnsTableProduct, maskMoney } from "../../Utils";
@@ -23,6 +24,8 @@ export function Product() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalEdit, setModalEdit] = useState(false);
   const [modalDelete, setModalDelete] = useState(false);
+  const [loadingInitial, setLoadingInitial] = useState(true);
+  const [search, setSearch] = useState("");
   const [product, setProduct] = useState({
     name: "",
     description: "",
@@ -30,6 +33,7 @@ export function Product() {
     link_url: "",
     category_id: "",
     id: "",
+    is_active: true,
   });
 
   const newProduct = useCallback(async () => {
@@ -49,6 +53,7 @@ export function Product() {
         link_url: "",
         category_id: "",
         id: "",
+        is_active: true,
       });
     } else {
       return customToast("Preencha todos os campos", "error");
@@ -72,6 +77,7 @@ export function Product() {
         link_url: "",
         category_id: "",
         id: "",
+        is_active: true,
       });
     } else {
       return customToast("Preencha todos os campos", "error");
@@ -93,11 +99,20 @@ export function Product() {
 
   useEffect(() => {
     if (!refUnicLoad.current) {
-      getProducts();
+      setLoadingInitial(true);
       getList();
+      setLoadingInitial(false);
       refUnicLoad.current = true;
     }
-  }, [getList, getProducts]);
+  }, [getList]);
+
+  const getListProducts = useCallback(async () => {
+    await getProducts(search);
+  }, [getProducts, search]);
+
+  useEffect(() => {
+    getListProducts();
+  }, [getListProducts]);
 
   const openModalEdit = useCallback((product: any) => {
     setProduct(product);
@@ -110,20 +125,24 @@ export function Product() {
   }, []);
   return (
     <>
-      {loading && <LoadingComponent />}
+      {loadingInitial && <LoadingComponent />}
       <div className="wrapperTable">
         <div className="wrapperHeader">
           <h1>Produtos</h1>
           <div className="wrapperSearch">
             <Search
               placeholder="Pesquisar"
-              onSearch={(value) => console.log(value)}
+              onSearch={(value) => setSearch(value)}
               style={{ width: 250 }}
             />
           </div>
           <Button type="primary" onClick={openModalCreate}>
             Novo Produto
           </Button>
+        </div>
+        <div style={{ textAlign: "center", height: "40px" }}>
+          {" "}
+          {loading && <Spinner />}{" "}
         </div>
         <div className="tableScroll">
           <Table className="table">
@@ -210,6 +229,7 @@ export function Product() {
             <Input
               placeholder="Preco"
               value={product.price}
+              type="number"
               onChange={(e) =>
                 setProduct({
                   ...product,
@@ -244,6 +264,17 @@ export function Product() {
               ))}
             </select>
           </div>
+          <Switch
+            checkedChildren="Produto Ativo"
+            unCheckedChildren="Produto Inativo"
+            checked={product.is_active}
+            onChange={(checked) =>
+              setProduct({
+                ...product,
+                is_active: checked,
+              })
+            }
+          />
         </div>
       </ModalComponent>
 
@@ -314,10 +345,21 @@ export function Product() {
               ))}
             </select>
           </div>
+          <Switch
+            checkedChildren="Produto Ativo"
+            unCheckedChildren="Produto Inativo"
+            checked={product.is_active}
+            onChange={(checked) =>
+              setProduct({
+                ...product,
+                is_active: checked,
+              })
+            }
+          />
         </div>
       </ModalComponent>
 
-      {/* Modal Edit */}
+      {/* Modal Excluir */}
       <ModalComponent
         setOpen={setModalDelete}
         open={modalDelete}
