@@ -1,4 +1,4 @@
-import { BiHomeAlt } from "react-icons/bi";
+import { BiHomeAlt, BiLogOut } from "react-icons/bi";
 import { MdShopTwo } from "react-icons/md";
 import { TbNewSection } from "react-icons/tb";
 export const MenuData = [

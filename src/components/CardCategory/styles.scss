@@ -10,6 +10,11 @@
   background-color: #fff;
   box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease-in-out;
+
+  @media screen and (max-width: 560px) {
+    flex-direction: column;
+    width: 100%;
+  }
   &:hover {
     box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.2);
   }

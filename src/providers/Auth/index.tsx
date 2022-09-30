@@ -42,13 +42,13 @@ export const AuthProvider = ({ children }: any) => {
     api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   };
 
-  const signOut = async () => {
+  const signOut = useCallback(async () => {
     setUser(null);
     localStorage.removeItem("@auth:User");
     localStorage.removeItem("token");
     api.defaults.headers.common["Authorization"] = "";
     navigate("/");
-  };
+  }, [navigate]);
 
   const loadingStoreData = useCallback(async () => {
     const user = localStorage.getItem("@auth:User");
@@ -56,8 +56,10 @@ export const AuthProvider = ({ children }: any) => {
     if (user && token) {
       saveAuthToken(token);
       setUser(JSON.parse(user));
+    } else {
+      signOut();
     }
-  }, []);
+  }, [signOut]);
 
   //register Account
   const registerAccount = async (data: any) => {

@@ -1,5 +1,7 @@
-import { NavLink } from "react-router-dom";
+import { Button } from "antd";
+import { NavLink, useNavigate } from "react-router-dom";
 import { MenuData } from "../../NavSideBar";
+import { useAuth } from "../../providers/Auth";
 import style from "./styles.module.scss";
 
 interface Props {
@@ -8,6 +10,7 @@ interface Props {
 }
 
 export const Header = ({ routeProtected, collapsed }: Props) => {
+  const { signOut } = useAuth();
   if (routeProtected) {
     return (
       <header className={style.containerHeader}>
@@ -26,6 +29,16 @@ export const Header = ({ routeProtected, collapsed }: Props) => {
             );
           })}
         </nav>
+        <div className={style.containerButton}>
+          <Button
+            type="primary"
+            danger
+            className={style.buttonLogout}
+            onClick={signOut}
+          >
+            Sair
+          </Button>
+        </div>
       </header>
     );
   }

@@ -189,6 +189,16 @@ export function Product() {
                           Excluir
                         </Button>
                       </div>
+                      <div style={{ margin: "12px 0" }}>
+                        <p>
+                          <Switch
+                            checked={product.is_active}
+                            checkedChildren="Ativo"
+                            unCheckedChildren="Inativo"
+                            disabled
+                          />
+                        </p>
+                      </div>
                     </td>
                   </tr>
                 ))}
